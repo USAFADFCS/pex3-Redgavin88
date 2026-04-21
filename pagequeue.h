@@ -35,6 +35,12 @@ typedef struct PageQueue {
  */
 PageQueue *pqInit(unsigned int maxSize);
 
+
+void qInsert(PageQueue* pq, unsigned long page);
+
+PqNode* qRemove(PageQueue* pq, int which);
+
+
 /**
  * @brief Access a page in the queue (simulates a memory reference)
  * @param pq pointer to the PageQueue

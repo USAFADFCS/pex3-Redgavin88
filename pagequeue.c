@@ -18,7 +18,60 @@
 PageQueue *pqInit(unsigned int maxSize) {
     // TODO: malloc a PageQueue, set head and tail to NULL,
     //       size to 0, maxSize to maxSize, and return the pointer
-    return NULL;
+
+    PageQueue* pq = malloc(sizeof(PageQueue));
+    pq->head = NULL;
+    pq->tail = NULL;
+    pq->maxSize = maxSize;
+    pq->size = 0;
+    return pq;
+}
+
+void qInsert(PageQueue* pq, unsigned long page){
+    if (!(pq->head)) {   // empty queue — new node becomes both head and tail
+        pq->head = malloc(sizeof(PqNode));
+        pq->tail = pq->head;
+        pq->head->pageNum = page;
+        pq->head->next = NULL;
+        pq->head->prev = NULL;
+    } else {            // non-empty — append new node at the tail
+        PqNode* oldTail = pq->tail;
+        PqNode* newTail = malloc(sizeof(PqNode));
+        newTail->next = NULL;
+        newTail->prev = oldTail;
+        newTail->pageNum = page;
+        oldTail->next = newTail;
+        pq->tail = newTail;
+    }
+}
+
+PqNode* qRemove(PageQueue* pq, int which) {
+    // walk forward to the requested position
+    PqNode* curr = pq->head;
+    while (curr && which > 0) {
+        curr = curr->next;
+        which--;
+    }
+
+    if (!curr) {                                // position is out of bounds or queue is empty
+        return NULL;
+    } else if (curr == pq->head && curr == pq->tail) {   // only node in the list
+        pq->head = NULL;
+        pq->tail = NULL;
+    } else if (curr == pq->head) {              // removing the head
+        pq->head = curr->next;
+        pq->head->prev = NULL;
+    } else if (curr == pq->tail) {              // removing the tail
+        pq->tail = curr->prev;
+        pq->tail->next = NULL;
+    } else {                                   // removing an interior node
+        curr->prev->next = curr->next;
+        curr->next->prev = curr->prev;
+    }
+
+    PqNode* removed = curr;
+    free(curr);
+    return removed;
 }
 
 /**
@@ -37,6 +90,13 @@ long pqAccess(PageQueue *pq, unsigned long pageNum) {
     //   - Allocate a new node for pageNum and insert it at the tail.
     //   - If size now exceeds maxSize, evict the head node (free it).
     //   - Return -1.
+
+    int d = 0;
+    for (int i = 0; i < pq->size; i++)
+    {
+        
+    }
+    
     return -1;
 }
 
