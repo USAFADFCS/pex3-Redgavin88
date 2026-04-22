@@ -45,7 +45,7 @@ void qInsert(PageQueue* pq, unsigned long page){
     }
 }
 
-PqNode* qRemove(PageQueue* pq, int which) {
+void qRemove(PageQueue* pq, int which) {
     // walk forward to the requested position
     PqNode* curr = pq->head;
     while (curr && which > 0) {
@@ -69,9 +69,9 @@ PqNode* qRemove(PageQueue* pq, int which) {
         curr->next->prev = curr->prev;
     }
 
-    PqNode* removed = curr;
+    // PqNode* removed = curr;
     free(curr);
-    return removed;
+    // return removed;
 }
 
 /**
@@ -91,11 +91,36 @@ long pqAccess(PageQueue *pq, unsigned long pageNum) {
     //   - If size now exceeds maxSize, evict the head node (free it).
     //   - Return -1.
 
-    int d = 0;
-    for (int i = 0; i < pq->size; i++)
+    int i = 0;
+    int depth = -1;
+    PqNode* curr = pq->tail;
+
+    while ((i< pq->size)&&(curr->pageNum != pageNum))
     {
-        
+   
+       i++;
+
+       curr = curr->prev;
     }
+
+    if (curr->pageNum == pageNum)   {
+        depth = i;
+        qRemove(pq, (pq->size - 1)- depth);
+        qInsert(pq, pageNum);
+        return depth;
+    }
+
+    else if (depth == -1)
+    {
+        qInsert(pq, pageNum);
+
+        if (pq->size > pq->maxSize)   {
+            qRemove(pq, pq->size - 1);
+        }
+    }
+
+
+    
     
     return -1;
 }

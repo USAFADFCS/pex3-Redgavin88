@@ -38,7 +38,7 @@ PageQueue *pqInit(unsigned int maxSize);
 
 void qInsert(PageQueue* pq, unsigned long page);
 
-PqNode* qRemove(PageQueue* pq, int which);
+void qRemove(PageQueue* pq, int which);
 
 
 /**
