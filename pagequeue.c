@@ -54,7 +54,7 @@ void qRemove(PageQueue* pq, int which) {
     }
 
     if (!curr) {                                // position is out of bounds or queue is empty
-        return NULL;
+        return;
     } else if (curr == pq->head && curr == pq->tail) {   // only node in the list
         pq->head = NULL;
         pq->tail = NULL;
@@ -71,7 +71,7 @@ void qRemove(PageQueue* pq, int which) {
 
     // PqNode* removed = curr;
     free(curr);
-    // return removed;
+    return;
 }
 
 /**
@@ -131,6 +131,35 @@ long pqAccess(PageQueue *pq, unsigned long pageNum) {
 void pqFree(PageQueue *pq) {
     // TODO: Walk from head to tail, free each node, then free
     //       the PageQueue struct itself.
+
+    //if there is no list return
+    if (pq == NULL)   {
+        printf("Queue does not exist.\n");
+        return;
+    }
+
+    // if there is no nodes just free the list
+    if (pq->head == NULL)   {
+        free(pq);
+        return;
+    }
+
+    //free all nodes first
+    PqNode* currentNode = pq->head;
+    PqNode* prevNode = NULL;
+
+    while (currentNode != NULL)   {
+        prevNode = currentNode;
+        currentNode =currentNode->next;
+
+        prevNode->next = NULL;
+        prevNode->prev = NULL;
+        free(prevNode);
+    }
+    pq->head = NULL;
+
+    //free list
+    free(pq);
 }
 
 /**
