@@ -32,6 +32,7 @@ void qInsert(PageQueue* pq, unsigned long page){
         pq->head = (PqNode*) malloc(sizeof(PqNode));
         pq->tail = pq->head;
         pq->head->pageNum = page;
+        pq->size++;
         pq->head->next = NULL;
         pq->head->prev = NULL;
     } else {            // non-empty — append new node at the tail
@@ -41,6 +42,7 @@ void qInsert(PageQueue* pq, unsigned long page){
         newTail->prev = oldTail;
         newTail->pageNum = page;
         oldTail->next = newTail;
+        pq->size++;
         pq->tail = newTail;
     }
 }
@@ -69,6 +71,8 @@ void qRemove(PageQueue* pq, int which) {
         curr->next->prev = curr->prev;
     }
 
+    pq->size--;
+
     // PqNode* removed = curr;
     free(curr);
     return;
@@ -94,41 +98,46 @@ long pqAccess(PageQueue *pq, unsigned long pageNum) {
     int i = 0;
     int depth = -1;
     PqNode* curr = pq->tail;
-    // printf("Hello1\n");
 
     if (curr)   {
         // qInsert(pq, pageNum);
         // return -1;
     
 
-        // printf("Hello2\n");
-        while ((i< pq->size)&&(curr->pageNum != pageNum))
-        {
+        while ((i< pq->size)&&(curr->pageNum != pageNum)){
     
-        i++;
+            i++;
 
-        curr = curr->prev;
+            curr = curr->prev;
         }
 
-        if (curr->pageNum == pageNum)   {
-            depth = i;
-            qRemove(pq, (pq->size - 1)- depth);
-            qInsert(pq, pageNum);
-            return depth;
-        }
 
-        else if (depth == -1)
-        {
-            qInsert(pq, pageNum);
-
-            if (pq->size > pq->maxSize)   {
-                qRemove(pq, pq->size - 1);
+        if (curr){
+            if (curr->pageNum == pageNum)   {
+                depth = i;
+                qRemove(pq, (pq->size - 1)- depth);
+                qInsert(pq, pageNum);
+                return depth;
             }
 
-            return -1;
+            else 
+            {
+                qInsert(pq, pageNum);
+
+                if (pq->size > pq->maxSize)   {
+                    qRemove(pq, 0);
+                }
+
+                return -1;
+            }
         }
+
     }
-    qInsert(pq,pageNum);   
+    qInsert(pq,pageNum);
+
+    if (pq->size > pq->maxSize)   {
+        qRemove(pq, 0);
+    }   
     
     return -1;
 }
@@ -185,6 +194,10 @@ void pqPrint(PageQueue *pq) {
         if (curr)
         {
             printf("%d:%lu\n", i, curr->pageNum);
+        }
+
+        if (i!= pq->size - 1)   {
+            curr = curr->next;
         }
         
 
