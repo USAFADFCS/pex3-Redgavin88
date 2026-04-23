@@ -19,7 +19,7 @@ PageQueue *pqInit(unsigned int maxSize) {
     // TODO: malloc a PageQueue, set head and tail to NULL,
     //       size to 0, maxSize to maxSize, and return the pointer
 
-    PageQueue* pq = malloc(sizeof(PageQueue));
+    PageQueue* pq = (PageQueue*) malloc(sizeof(PageQueue));
     pq->head = NULL;
     pq->tail = NULL;
     pq->maxSize = maxSize;
@@ -29,14 +29,14 @@ PageQueue *pqInit(unsigned int maxSize) {
 
 void qInsert(PageQueue* pq, unsigned long page){
     if (!(pq->head)) {   // empty queue — new node becomes both head and tail
-        pq->head = malloc(sizeof(PqNode));
+        pq->head = (PqNode*) malloc(sizeof(PqNode));
         pq->tail = pq->head;
         pq->head->pageNum = page;
         pq->head->next = NULL;
         pq->head->prev = NULL;
     } else {            // non-empty — append new node at the tail
         PqNode* oldTail = pq->tail;
-        PqNode* newTail = malloc(sizeof(PqNode));
+        PqNode* newTail = (PqNode*) malloc(sizeof(PqNode));
         newTail->next = NULL;
         newTail->prev = oldTail;
         newTail->pageNum = page;
@@ -94,33 +94,41 @@ long pqAccess(PageQueue *pq, unsigned long pageNum) {
     int i = 0;
     int depth = -1;
     PqNode* curr = pq->tail;
+    // printf("Hello1\n");
 
-    while ((i< pq->size)&&(curr->pageNum != pageNum))
-    {
-   
-       i++;
+    if (curr)   {
+        // qInsert(pq, pageNum);
+        // return -1;
+    
 
-       curr = curr->prev;
-    }
+        // printf("Hello2\n");
+        while ((i< pq->size)&&(curr->pageNum != pageNum))
+        {
+    
+        i++;
 
-    if (curr->pageNum == pageNum)   {
-        depth = i;
-        qRemove(pq, (pq->size - 1)- depth);
-        qInsert(pq, pageNum);
-        return depth;
-    }
+        curr = curr->prev;
+        }
 
-    else if (depth == -1)
-    {
-        qInsert(pq, pageNum);
+        if (curr->pageNum == pageNum)   {
+            depth = i;
+            qRemove(pq, (pq->size - 1)- depth);
+            qInsert(pq, pageNum);
+            return depth;
+        }
 
-        if (pq->size > pq->maxSize)   {
-            qRemove(pq, pq->size - 1);
+        else if (depth == -1)
+        {
+            qInsert(pq, pageNum);
+
+            if (pq->size > pq->maxSize)   {
+                qRemove(pq, pq->size - 1);
+            }
+
+            return -1;
         }
     }
-
-
-    
+    qInsert(pq,pageNum);   
     
     return -1;
 }
@@ -169,4 +177,17 @@ void pqPrint(PageQueue *pq) {
     // TODO (optional): Print each page number from head to tail,
     //                  marking which is head and which is tail.
     //                  Useful for desk-checking small traces.
+
+    PqNode* curr = pq->head;
+
+    for (int i = 0; i < pq->size; i++)
+    {
+        if (curr)
+        {
+            printf("%d:%lu\n", i, curr->pageNum);
+        }
+        
+
+    }
+    
 }

@@ -1,0 +1,2 @@
+Total Accesses:,0
+Frames,Missees,Miss Rate
