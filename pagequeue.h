@@ -1,7 +1,7 @@
 /** pagequeue.h
  * ===========================================================
- * Name: _______________________, __ ___ 2026
- * Section: CS483 / ____
+ * Name: _______gavin Smith________________, __23 __APR_ 2026
+ * Section: CS483 / __M4__
  * Project: PEX3 - Page Replacement Simulator
  * Purpose: Doubly-linked list page queue ADT for LRU page
  *          replacement. Head = LRU end, Tail = MRU end.
@@ -35,9 +35,18 @@ typedef struct PageQueue {
  */
 PageQueue *pqInit(unsigned int maxSize);
 
-
+/**
+ * @brief Insert node with page num
+ * @param pq pointer to page queue
+ * @param page page number to add
+ */
 void qInsert(PageQueue* pq, unsigned long page);
 
+/**
+ * @brief Remove node from queue at a cetain index
+ * @param pq pointer to page queue
+ * @param which index number to remove
+ */
 void qRemove(PageQueue* pq, int which);
 
 

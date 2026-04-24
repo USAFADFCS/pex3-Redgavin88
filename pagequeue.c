@@ -1,7 +1,7 @@
 /** pagequeue.c
  * ===========================================================
- * Name: _______________________, __ ___ 2026
- * Section: CS483 / ____
+ * Name: _________Gavin Smith______________, _23_ __APR_ 2026
+ * Section: CS483 / __M3__
  * Project: PEX3 - Page Replacement Simulator
  * Purpose: Implementation of the PageQueue ADT — a doubly-linked
  *          list for LRU page replacement.
@@ -19,6 +19,7 @@ PageQueue *pqInit(unsigned int maxSize) {
     // TODO: malloc a PageQueue, set head and tail to NULL,
     //       size to 0, maxSize to maxSize, and return the pointer
 
+    //malloc the pq and set values to their intials
     PageQueue* pq = (PageQueue*) malloc(sizeof(PageQueue));
     pq->head = NULL;
     pq->tail = NULL;
@@ -95,15 +96,16 @@ long pqAccess(PageQueue *pq, unsigned long pageNum) {
     //   - If size now exceeds maxSize, evict the head node (free it).
     //   - Return -1.
 
+    //initalize the counter, depth, and curr var to hold the incrementing nodes
     int i = 0;
     int depth = -1;
     PqNode* curr = pq->tail;
 
+    //if curr is NULL skip to end
     if (curr)   {
-        // qInsert(pq, pageNum);
-        // return -1;
     
 
+        //increment curr until it reaches the pagenum or the end of the queue
         while ((i< pq->size)&&(curr->pageNum != pageNum)){
     
             i++;
@@ -112,7 +114,9 @@ long pqAccess(PageQueue *pq, unsigned long pageNum) {
         }
 
 
+        //if it is null skip becuase it reached the end of the queue
         if (curr){
+            //ensure same pagenum then remove it and add it to the LRU spot
             if (curr->pageNum == pageNum)   {
                 depth = i;
                 qRemove(pq, (pq->size - 1)- depth);
@@ -120,6 +124,7 @@ long pqAccess(PageQueue *pq, unsigned long pageNum) {
                 return depth;
             }
 
+            //error case, just insert and remove for max size
             else 
             {
                 qInsert(pq, pageNum);
@@ -133,6 +138,8 @@ long pqAccess(PageQueue *pq, unsigned long pageNum) {
         }
 
     }
+
+    //Must not be in queue so it is a miss, add to queue and enforce max size. Then return -1
     qInsert(pq,pageNum);
 
     if (pq->size > pq->maxSize)   {
@@ -187,8 +194,10 @@ void pqPrint(PageQueue *pq) {
     //                  marking which is head and which is tail.
     //                  Useful for desk-checking small traces.
 
+    //set temp value to increment through queue.
     PqNode* curr = pq->head;
 
+    //loop through pq and print page number
     for (int i = 0; i < pq->size; i++)
     {
         if (curr)

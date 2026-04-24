@@ -1,12 +1,12 @@
 /** main.c
  * ===========================================================
- * Name: _______________________, __ ___ 2026
- * Section: CS483 / ____
+ * Name: _______________Gavin Smith________, 23 APR 2026
+ * Section: CS483 / M3
  * Project: PEX3 - Page Replacement Simulator
  * Purpose: Reads a BYU binary memory trace file and simulates
  *          LRU page replacement to measure fault rates across
  *          varying frame allocations.
- * Documentation: TBD
+ * Documentation: None.
  * =========================================================== */
 #include <stdio.h>
 #include <stdlib.h>
@@ -72,6 +72,7 @@ int main(int argc, char **argv) {
     //       total number of page faults that occur when f frames are
     //       available.  Use calloc so all entries start at zero.
  
+    //create frames and page queue
     PageQueue* pq = pqInit(maxFrames);
     
     unsigned long int* faults;
@@ -100,15 +101,14 @@ int main(int argc, char **argv) {
         //
         //       Update faults[] accordingly.
 
-        
+        //initalize depth to 0 and call pqAccess
         long depth = 0;
         
         depth = pqAccess(pq,pageNum);
         
-        // printf("%ld\n",pageNum);
-        // printf("%d\n",pq->size);
-        // printf("%ld\n",depth);
         
+        //Test cases to increment faults correctly
+        //Miss: so increment all faults
         if (depth == -1)   {
             for (int i = 0; i < maxFrames; i++)
             {
@@ -116,7 +116,7 @@ int main(int argc, char **argv) {
             }
             
         }
-
+        //Hit so increment only the faults leading to depth
         else if (depth >= 0)   {
             for (int i = 0; i < depth; i++)
             {
@@ -128,30 +128,7 @@ int main(int argc, char **argv) {
         
     }
     
-    // int depth = 0;
-        
-    // depth = pqAccess(pq,1);
-    // printf("%d\n",depth);
-
-    // depth = pqAccess(pq,2);
-    // printf("%d\n",depth);
-
-    // depth = pqAccess(pq,3);
-    // printf("%d\n",depth);
-
-    // depth = pqAccess(pq,2);
-    // printf("%d\n",depth);
-
-    // depth = pqAccess(pq,4);
-    // printf("%d\n",depth);
-
-    // depth = pqAccess(pq,3);
-    // printf("%d\n",depth);
-
-
-
-    // pqPrint(pq);
-
+    
     fprintf(stderr, "\n%lu total accesses processed\n", numAccesses);
 
     // Output CSV results to stdout (redirect with > to create a .csv file)
@@ -161,6 +138,7 @@ int main(int argc, char **argv) {
     // TODO: Loop from frame count 1 to maxFrames and print each row:
     //       printf("%d,%lu,%f\n", frameCount, faults[frameCount],
     //              (double)faults[frameCount] / (double)numAccesses);
+    //loop through the frames and print
     for (int i = 0; i < maxFrames; i++)
     {
         printf("%d,%lu,%f\n", i + 1, faults[i], (double)faults[i] / (double)numAccesses);
@@ -168,12 +146,10 @@ int main(int argc, char **argv) {
     
     // TODO: Free your PageQueue and the faults[] array,
     //       then close the file.
-    for (int i = 0; i < pq->size; i++)
-    {
-        qRemove(pq,0);
-    }
 
-    free(pq);
+    //free pq and faults and then close file.
+    pqFree(pq);
+    free(faults);
     
     fclose(ifp);
 
