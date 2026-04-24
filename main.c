@@ -104,8 +104,10 @@ int main(int argc, char **argv) {
         long depth = 0;
         
         depth = pqAccess(pq,pageNum);
-        printf("%d\n",pq->size);
-        printf("%ld\n",depth);
+        
+        printf("%ld\n",pageNum);
+        // printf("%d\n",pq->size);
+        // printf("%ld\n",depth);
         
         if (depth == -1)   {
             for (int i = 0; i < maxFrames; i++)
