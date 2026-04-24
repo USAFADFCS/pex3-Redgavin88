@@ -105,7 +105,7 @@ int main(int argc, char **argv) {
         
         depth = pqAccess(pq,pageNum);
         
-        printf("%ld\n",pageNum);
+        // printf("%ld\n",pageNum);
         // printf("%d\n",pq->size);
         // printf("%ld\n",depth);
         
@@ -161,10 +161,10 @@ int main(int argc, char **argv) {
     // TODO: Loop from frame count 1 to maxFrames and print each row:
     //       printf("%d,%lu,%f\n", frameCount, faults[frameCount],
     //              (double)faults[frameCount] / (double)numAccesses);
-    // for (int i = 0; i < maxFrames; i++)
-    // {
-    //     printf("%d,%lu,%f\n", i + 1, faults[i], (double)faults[i] / (double)numAccesses);
-    // }
+    for (int i = 0; i < maxFrames; i++)
+    {
+        printf("%d,%lu,%f\n", i + 1, faults[i], (double)faults[i] / (double)numAccesses);
+    }
     
     // TODO: Free your PageQueue and the faults[] array,
     //       then close the file.
